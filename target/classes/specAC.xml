@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xmlns:c="http://www.springframework.org/schema/c"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:cache="http://www.springframework.org/schema/cache"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+						http://www.springframework.org/schema/cache
+						http://www.springframework.org/schema/cache/spring-cache-3.2.xsd
+						http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd"
+    >
+    <context:annotation-config/>
+    <context:property-placeholder location="classpath:guava.properties"/>
+    <context:component-scan base-package="com.own.guavaP.service"/>
+    <!-- 配置freeMarker的模版路径 -->
+    <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer"
+    p:templateLoaderPath="/WEB-INF/ftl"
+    p:defaultEncoding="UTF-8"
+    />
+    
+    <!--用CacheBuilderSpec来新建cache-->
+    <bean id="cacheBuilderSpec"
+       class="com.google.common.cache.CacheBuilderSpec"
+       factory-method="parse"
+       c:cacheBuilderSpecification="${cacheSpecification}"
+    />
+    <bean id="cacheBuilder"
+       class="com.google.common.cache.CacheBuilder"
+       factory-method="from"
+       c:spec-ref="cacheBuilderSpec"
+    />
+   <bean id="cacheSpec"
+    factory-bean="cacheBuilder"
+    factory-method="build"
+   />
+ </beans>
